@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "Mirage-Omega1"
+version = "1.0.0"
+description = "Voice Cloning model"
+authors = [
+    {name = "Naveen Muwal",email = "naveenmuwal2052003@gmail.com"},
+    {name = "Mohit Narayan Vashisth",email = "mohitnarayanvashisth2703@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi (>=0.115.11,<0.116.0)",
+    "python-json-logger (>=3.3.0,<4.0.0)"
+]
+packages = [{ include = "api" }, { include = "Mirage-Omega1" }]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+dev = "api.main:initializeAPP"

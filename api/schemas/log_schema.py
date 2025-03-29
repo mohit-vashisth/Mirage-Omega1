@@ -4,6 +4,9 @@ import sys
 from pythonjsonlogger.json import JsonFormatter
 from api.core import config
 from rich.logging import RichHandler
+from api.security.filters import RequestContextFilter
+
+context_filter = RequestContextFilter()
 
 class CustomJSONFormatter(JsonFormatter):
     def format(self, record):
@@ -22,7 +25,6 @@ class CustomJSONFormatter(JsonFormatter):
         if isinstance(record.exc_info, tuple):
             exception_str = self.formatException(record.exc_info)
             log_entry["exception"] = "\n".join(exception_str) if isinstance(exception_str, list) else exception_str
-
 
         if config.DEBUG:
             log_entry.update(
@@ -57,8 +59,15 @@ rich_handler = RichHandler(rich_tracebacks=True, markup=True)
 rich_handler.setFormatter(fmt=CustomJSONFormatter())
 
 # add handlers
-logger.addHandler(rich_handler)  # Pretty logs in dev
-logger.addHandler(file_handler)  # Persistent logs
-logger.addHandler(error_handler)  # Store errors separately
+logger.addHandler(rich_handler)      # For dev preview
+logger.addHandler(file_handler)      # All logs to file
+logger.addHandler(error_handler)     # Error logs only
 
-logging.getLogger("uvicorn.access").propagate = False
+# add filters
+json_handler.addFilter(context_filter)
+file_handler.addFilter(context_filter)
+error_handler.addFilter(context_filter)
+rich_handler.addFilter(context_filter)
+
+logger.propagate = False
+logging.getLogger("uvicorn.access").propagate = True

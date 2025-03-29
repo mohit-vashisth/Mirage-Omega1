@@ -4,32 +4,43 @@ from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 from api.logging.logger import init_logger
 from api.core import config
+from api.utils.context import set_request_context
 
 # CORS Middleware
 def setup_cors_middleware(app):
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000", "http://localhost:3001"],  # Allow only frontend origins
+        allow_origins=["http://localhost:3000", "http://localhost:3001"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
         max_age=600 if config.DEBUG else 86400,
     )
 
-# Custom Middleware for Request Logging
+# Request ID & Logging Middleware
 async def add_x_request_id(request: Request, call_next):
     request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
-    start_time = time.time()
+    ip = request.client.host if request.client else "Unknown"
+    user_agent = request.headers.get("user-agent", "Unknown")
+    path = request.url.path
 
+    # Set request context vars
+    set_request_context(request_id, ip, user_agent, path)
+
+    # Track processing time
+    start_time = time.time()
     response = await call_next(request)
-    
     process_time = round(time.time() - start_time, 4)
+
+    # Inject response header
     response.headers["X-Request-ID"] = request_id
 
+    # Log the request
     init_logger(
-        message=f"{request.method} {request.url.path} - {response.status_code} in {process_time}s",
+        message=f"{request.method} {path} - {response.status_code} in {process_time}s",
         request=request,
         level="debug",
     )
 
     return response
+

@@ -1,15 +1,16 @@
 from fastapi import Request
 from api.schemas.log_schema import logger
 
-def init_logger(message: str, level: str = "debug", request: Request | None = None):
-    request_id = request.headers.get("X-Request-ID", "None") if request else "None"
+def init_logger( message: str, level: str = "debug", request: Request | None = None, exc: Exception | None = None, **kwargs):
 
     extra = {
-        "request_id": request_id,
+        "request_id": request.headers.get("X-Request-ID", "None") if request else "None",
         "user_agent": request.headers.get("user-agent", "Unknown") if request else "Unknown",
         "ip": request.client.host if request and request.client else "Unknown",
-        "path": request.url.path if request else "Unknown"
+        "path": request.url.path if request else "Unknown",
     }
+
+    extra.update(kwargs)
 
     match str(level).lower():
         case "debug":

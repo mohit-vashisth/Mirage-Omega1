@@ -20,6 +20,8 @@ dotenv = "^0.9.9"
 pathlib = "^1.0.1"
 authlib = "^1.5.1"
 httpx = "^0.28.1"
+pyttest = "^1.0.1"
+pytest-asyncio = "^0.26.0"
 
 [tool.poetry.scripts]
 dev = "api.main:initializeAPP"

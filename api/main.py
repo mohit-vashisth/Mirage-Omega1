@@ -5,6 +5,8 @@ from api.logging.logger import init_logger
 import uvicorn
 from fastapi import FastAPI
 
+from api.routes.routers import include_routers
+
 init_logger(message="Starting FastAPI Application")
 
 app = FastAPI()
@@ -14,6 +16,7 @@ setup_cors_middleware(app=app)
 app.middleware("http")(add_x_request_id)
 
 create_error_handlers(app=app)
+include_routers(app=app)
 
 @app.get(path="/")
 async def root() -> dict:

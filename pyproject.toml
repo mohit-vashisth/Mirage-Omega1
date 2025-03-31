@@ -22,9 +22,19 @@ authlib = "^1.5.1"
 httpx = "^0.28.1"
 pyttest = "^1.0.1"
 pytest-asyncio = "^0.26.0"
+hypothesis = "^6.130.5"
 
 [tool.poetry.scripts]
 dev = "api.main:initializeAPP"
+
+[tool.poetry.group.dev.dependencies]
+pytest-xdist = "^3.6.1"
+httpx = "^0.28.1"
+pytest = "^8.3.5"
+anyio = "^4.9.0"
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

@@ -1,11 +1,12 @@
-import torch
-from TTS.tts.models.xtts import XttsAudioConfig  # Import the missing class
-from TTS.api import TTS
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-# Allowlist `XttsAudioConfig` to be safely unpickled
-torch.serialization.add_safe_globals([XttsAudioConfig])
+model_name = "facebook/nllb-200-distilled-600M"
+model_store_dir = "ml_models/ete-synthesis"
 
-# Load TTS Model
-tts = TTS(model_name="tts_models/multilingual/multi-dataset/xtts_v2").to(
-    "cuda" if torch.cuda.is_available() else "cpu"
-)
+print("downloading model...")
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+
+tokenizer.save_pretrained(model_store_dir)
+model.save_pretrained(model_store_dir)
+print("✅ Model saved successfully!")

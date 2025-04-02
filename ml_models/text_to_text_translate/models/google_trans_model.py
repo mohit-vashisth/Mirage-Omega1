@@ -1,9 +1,9 @@
 from googletrans import Translator
 
-from api.schemas.language_translate import Language_response
+from api.schemas.language_translate import LanguageResponse
 from api.logging.logger import init_logger
 
-def google_Trans_transltor(response: Language_response):
+def google_Trans_transltor(response: LanguageResponse):
     try:
         translated_text = Translator().translate(text=response.text, dest=response.dest, src="auto").text
         init_logger(message=f"final text: {translated_text}")

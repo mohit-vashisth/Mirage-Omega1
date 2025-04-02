@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from api.core import config
 from api.logging.logger import init_logger
-from api.schemas.language_translate import Language_request, Language_response
+from api.schemas.language_translate import LanguageRequest, LanguageResponse
 import fasttext
 import re
 import os
@@ -17,7 +17,7 @@ except Exception as model_load_err:
     detect_model = None  # Prevent crashes
 
 
-def detect_language(request: Language_request) -> Language_response:
+def detect_language(request: LanguageRequest) -> LanguageResponse:
     try:
         init_logger(message=f"user text for translation: {request.text}")
         
@@ -63,7 +63,7 @@ def detect_language(request: Language_request) -> Language_response:
 
         init_logger(message=f"Detected Language: {detected_lang} | Confidence: {confidence}")
 
-        return Language_response(text=request.text, dest=request.dest, src=src_lang)
+        return LanguageResponse(text=request.text, dest=request.dest, src=src_lang)
 
     except HTTPException as http_exp:
         init_logger(message=f"HTTP Exception: {http_exp.detail}", level="error")

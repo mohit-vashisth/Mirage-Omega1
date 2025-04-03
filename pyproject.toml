@@ -26,10 +26,12 @@ hypothesis = "^6.130.5"
 pymongo = "^4.11.3"
 pytest = "^8.3.5"
 torch = "2.5.0"
-tts = "^0.22.0"
 deep-translator = "^1.11.4"
 transformers = "^4.50.3"
 sentencepiece = "^0.2.0"
+fairseq = "^0.12.2"
+sacrebleu = "^2.5.1"
+numpy = "^2.2.4"
 
 [tool.poetry.scripts]
 dev = "api.main:initializeAPP"

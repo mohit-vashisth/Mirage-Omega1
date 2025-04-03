@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+nllb-200-distilled-600M/
 
 # backend
 __pycache__/

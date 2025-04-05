@@ -1,26 +1,50 @@
+from api.logging.logger import init_logger
+from api.schemas.language_translate import LanguageRequest
+
+import os
 import torch
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-model_name = "ml_models/text_to_text_translate/model/nllb-200-distilled-600M"
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+model_path = "ml_models/text_to_text_translate/model/nllb_model_600M"
+device = torch.device("cpu")
 
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+def en_to_hi_translator(request: LanguageRequest) -> str:
+    text = request.text
 
-src_text = "मेरा नाम मोहित है तू कौन हो भाई?"
-dest = "eng_Latn"
-src = "hin_deva"
+    target_lang_map = {
+        "hi": "hin_Deva",
+        "en": "eng_Latn"
+    }
 
-inputs = tokenizer(src_text, return_tensors="pt")
-tokenizer.lang_code_to_id = {
-    "eng_Latn": tokenizer.convert_tokens_to_ids(">>eng_Latn<<"),
-    "hin_Deva": tokenizer.convert_tokens_to_ids(">>hin_Deva<<"),
-}
-inputs["forced_bos_token_id"] = tokenizer.lang_code_to_id.get(dest)
+    if request.dest not in target_lang_map:
+        init_logger(message=f"dest: {request.dest} Not found")
+        raise ValueError(f"Unsupported destination language: {request.dest}")
 
-# Generate translation
-with torch.no_grad():
-    output_tokens = model.generate(**inputs)
+    dest = target_lang_map[request.dest]
 
-# Decode and print translation
-translated_text = tokenizer.batch_decode(output_tokens, skip_special_tokens=True)[0]
-print(f"Translated Text: {translated_text}")
+
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_path).to(device)
+
+    if tokenizer.lang_code_to_id is None:
+        tokenizer.lang_code_to_id = {
+            "eng_Latn": tokenizer.convert_tokens_to_ids(">>eng_Latn<<"),
+            "hin_Deva": tokenizer.convert_tokens_to_ids(">>hin_Deva<<"),
+        }
+
+    inputs = tokenizer(text, return_tensors="pt")
+
+    forced_bos_token_id = tokenizer.lang_code_to_id
+    if forced_bos_token_id is None:
+        raise ValueError(f"Unsupported target language code: {dest}")
+
+    inputs["forced_bos_token_id"] = forced_bos_token_id
+
+    with torch.no_grad():
+        output_tokens = model.generate(**inputs, forced_bos_token_id=forced_bos_token_id)
+
+    translated_text = tokenizer.batch_decode(output_tokens, skip_special_tokens=True)[0]
+    print(f"Translated Text: {translated_text}")
+
+    return translated_text

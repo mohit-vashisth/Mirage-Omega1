@@ -4,8 +4,8 @@ from api.schemas.language_translate import LanguageRequest
 
 from fastapi import APIRouter, Request, status
 
-from ml_models.text_to_text_translate.model.model import en_to_hi_translator
 from ml_models.text_to_text_translate.model.transformers_model import google_translate
+from ml_models.text_to_text_translate.model.translator import translate_to_hi
 
 translate_route = APIRouter()
 
@@ -13,8 +13,10 @@ translate_route = APIRouter()
 async def translate(req: LanguageRequest, request: Request):
     init_logger(message=f"text: {req.text} | destination: {req.dest}", request=request)
 
-    translated_text = en_to_hi_translator(request=req)
+    google_trans = google_translate(request=req)
+    translated_text = translate_to_hi(request=req)
 
     return {
-        "translated_text": translated_text
+        "translated_text": translated_text,
+        "translated_text_copy": google_trans
     }

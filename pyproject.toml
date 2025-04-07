@@ -31,9 +31,9 @@ transformers = "^4.50.3"
 sentencepiece = "^0.2.0"
 fairseq = "^0.12.2"
 sacrebleu = "^2.5.1"
-numpy = "1.21.6"
 googletrans = "^4.0.2"
 translate = "^3.6.1"
+noisereduce = "^3.0.3"
 
 [tool.poetry.scripts]
 dev = "api.main:initializeAPP"

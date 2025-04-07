@@ -954,6 +954,24 @@ test-full = ["adlfs", "aiohttp (!=4.0.0a0,!=4.0.0a1)", "cloudpickle", "dask", "d
 tqdm = ["tqdm"]
 
 [[package]]
+name = "googletrans"
+version = "4.0.2"
+description = "An unofficial Google Translate API for Python"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "googletrans-4.0.2-py3-none-any.whl", hash = "sha256:19e4fbbf7463e0cf4cd8f03479372910368730ac13dfb023fed6db58fd093547"},
+    {file = "googletrans-4.0.2.tar.gz", hash = "sha256:d9ef126b5d92fabeec0bb9ddcdbeecd43865fc00e17f1dfa07717837827a17de"},
+]
+
+[package.dependencies]
+httpx = {version = ">=0.27.2", extras = ["http2"]}
+
+[package.extras]
+dev = ["pytest", "pytest-asyncio", "pytest-cov", "ruff (>=0.7)"]
+
+[[package]]
 name = "h11"
 version = "0.14.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -963,6 +981,34 @@ groups = ["main", "dev"]
 files = [
     {file = "h11-0.14.0-py3-none-any.whl", hash = "sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761"},
     {file = "h11-0.14.0.tar.gz", hash = "sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d"},
+]
+
+[[package]]
+name = "h2"
+version = "4.2.0"
+description = "Pure-Python HTTP/2 protocol implementation"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "h2-4.2.0-py3-none-any.whl", hash = "sha256:479a53ad425bb29af087f3458a61d30780bc818e4ebcf01f0b536ba916462ed0"},
+    {file = "h2-4.2.0.tar.gz", hash = "sha256:c8a52129695e88b1a0578d8d2cc6842bbd79128ac685463b887ee278126ad01f"},
+]
+
+[package.dependencies]
+hpack = ">=4.1,<5"
+hyperframe = ">=6.1,<7"
+
+[[package]]
+name = "hpack"
+version = "4.1.0"
+description = "Pure-Python HPACK header encoding"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "hpack-4.1.0-py3-none-any.whl", hash = "sha256:157ac792668d995c657d93111f46b4535ed114f0c9c8d672271bbec7eae1b496"},
+    {file = "hpack-4.1.0.tar.gz", hash = "sha256:ec5eca154f7056aa06f196a557655c5b009b382873ac8d1e66e79e87535f1dca"},
 ]
 
 [[package]]
@@ -1002,6 +1048,7 @@ files = [
 [package.dependencies]
 anyio = "*"
 certifi = "*"
+h2 = {version = ">=3,<5", optional = true, markers = "extra == \"http2\""}
 httpcore = "==1.*"
 idna = "*"
 
@@ -1063,6 +1110,18 @@ files = [
 [package.dependencies]
 antlr4-python3-runtime = "4.8"
 omegaconf = ">=2.0.5,<2.1"
+
+[[package]]
+name = "hyperframe"
+version = "6.1.0"
+description = "Pure-Python HTTP/2 framing"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "hyperframe-6.1.0-py3-none-any.whl", hash = "sha256:b03380493a519fce58ea5af42e4a42317bf9bd425596f7a0835ffce80f1a42e5"},
+    {file = "hyperframe-6.1.0.tar.gz", hash = "sha256:f630908a00854a7adeabd6382b43923a4c4cd4b821fcb527e6ab9e15382a3b08"},
+]
 
 [[package]]
 name = "hypothesis"
@@ -1158,6 +1217,18 @@ files = [
 
 [package.dependencies]
 pydantic = ">=1.9.0"
+
+[[package]]
+name = "libretranslatepy"
+version = "2.1.1"
+description = "Python bindings for LibreTranslate API"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "libretranslatepy-2.1.1-py3-none-any.whl", hash = "sha256:bf9f8b0003c94f34e141553b7ec0a02876297c06955f5efea49afbc9f85303a9"},
+    {file = "libretranslatepy-2.1.1.tar.gz", hash = "sha256:3f28e1b990ba5f514ae215c08ace0c4e2327eeccaa356983aefbca3a25ecc568"},
+]
 
 [[package]]
 name = "lxml"
@@ -2902,6 +2973,24 @@ video = ["av"]
 vision = ["Pillow (>=10.0.1,<=15.0)"]
 
 [[package]]
+name = "translate"
+version = "3.6.1"
+description = "This is a simple, yet powerful command line translator with google translate behind it. You can also use it as a Python module in your code."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "translate-3.6.1-py2.py3-none-any.whl", hash = "sha256:cebfb004989d9a2ab0d24c0c5805783c7f4e07243ea4ed2a8f1809d072bf712b"},
+    {file = "translate-3.6.1.tar.gz", hash = "sha256:7e70ffa46f193cc744be7c88b8e1323f10f6b2bb90d24bb5d29fdf1e56618783"},
+]
+
+[package.dependencies]
+click = "*"
+libretranslatepy = "2.1.1"
+lxml = "*"
+requests = "*"
+
+[[package]]
 name = "triton"
 version = "3.1.0"
 description = "A language and compiler for custom Deep Learning operations"
@@ -2993,4 +3082,4 @@ standard = ["colorama (>=0.4) ; sys_platform == \"win32\"", "httptools (>=0.6.3)
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.12"
-content-hash = "c60d3b611d7de7b5938fb06fba3c5ed1892beb81d37e4cf6e1d3598b38cacbd1"
+content-hash = "3a8e8be4eed1112a5592121627bb22bb513ca82bf979e79785ae63510919ebcc"

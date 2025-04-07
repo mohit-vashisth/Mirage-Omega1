@@ -32,6 +32,8 @@ sentencepiece = "^0.2.0"
 fairseq = "^0.12.2"
 sacrebleu = "^2.5.1"
 numpy = "^2.2.4"
+googletrans = "^4.0.2"
+translate = "^3.6.1"
 
 [tool.poetry.scripts]
 dev = "api.main:initializeAPP"

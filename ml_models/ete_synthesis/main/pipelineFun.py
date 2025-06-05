@@ -1,14 +1,27 @@
 from dataclasses import dataclass
+import os
 import torch
 import torchaudio
 import matplotlib.pyplot as plt
 import noisereduce
 import torchaudio.functional as F
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 @dataclass
 class AudioInfo:
     y: torch.Tensor
     sr: int
+
+audios = "audios"
+os.makedirs(audios, exist_ok=True)
+
+executor = ThreadPoolExecutor()
+
+async def run_in_thread(fn, *args, **kwargs):
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(executor, lambda: fn(*args, **kwargs))
+
 
 def normalize_audio(info: AudioInfo) -> AudioInfo:
     y = info.y / info.y.abs().max()
@@ -16,7 +29,7 @@ def normalize_audio(info: AudioInfo) -> AudioInfo:
 
 def denoise_audio(info: AudioInfo) -> AudioInfo:
     y_np = info.y.numpy() if isinstance(info.y, torch.Tensor) else info.y
-    y_denoised = noisereduce.reduce_noise(y_np, sr=info.sr, prop_decrease=1.0)
+    y_denoised = noisereduce.reduce_noise(y_np, sr=info.sr, prop_decrease=1.0, stationary=True)
     y_denoised = y_denoised.mean(axis=0)
     y_tensor = torch.tensor(y_denoised, dtype=torch.float32)
     if y_tensor.ndim == 1:
@@ -71,7 +84,7 @@ def load_audio(
     equalize=True,
     mono=True,
     new_sr=22050,
-    visualize=True,
+    visualize=False,
     save=True,
 ):
     y, sr = torchaudio.load(input_uri)
@@ -96,7 +109,5 @@ def load_audio(
 
     return info
 
-def pipeline_audio(input_uri, output_uri="output.wav", **kwargs):
-    return load_audio(input_uri, output_uri, **kwargs)
-
-pipeline_audio(r"C:\Users\Admin\Documents\Mirage-Omega1\ml_models\ete_synthesis\audios\mysterious_dunia.mp3", visualize=True, denoise=True, trim=True, equalize=True)
+async def async_pipeline_audio(input_uri, output_uri="uploads/output.wav", **kwargs):
+    return await run_in_thread(load_audio, input_uri, output_uri, **kwargs)

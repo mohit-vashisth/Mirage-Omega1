@@ -10,6 +10,7 @@ audios/
 
 # backend
 __pycache__/
+tts_model/
 
 /frontend/node_modules
 /frontend/dist
